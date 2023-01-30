@@ -21,9 +21,10 @@ namespace SoundPicker
             InitializeComponent();
         }
 
+        private Label mylab1 = new Label();
         private Mp3Player mp3Player = new Mp3Player();
         private bool isPlaying = false;
-        private string[] filesFound;
+        private List<string> filesFound;
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -33,15 +34,16 @@ namespace SoundPicker
         {
             if (!isPlaying)
             {
-                if (filesFound.Any())
+                if (filesFound != null && filesFound.Any())
                 {
-                    var index = new Random().Next(0, filesFound.Length - 1);
+                    var index = new Random().Next(0, filesFound.Count - 1);
                     if (File.Exists(filesFound[index]))
                     {
+                        mp3Player.Dispose();
                         mp3Player.open(filesFound[index]);
                         mp3Player.play();
                         isPlaying = true;
-                        Label mylab1 = new Label();
+                        
                         mylab1.Text = Path.GetFileNameWithoutExtension(filesFound[index]);
                         mylab1.Location = new Point(200, 130);
                         mylab1.AutoSize = true;
@@ -62,7 +64,7 @@ namespace SoundPicker
                 DialogResult result = dfd.ShowDialog();
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(dfd.SelectedPath))
                 { 
-                    this.filesFound = Directory.GetFiles(dfd.SelectedPath);
+                    this.filesFound = Directory.GetFiles(dfd.SelectedPath).ToList();
                 }
             }
         }
@@ -77,6 +79,7 @@ namespace SoundPicker
             if (isPlaying)
             {
                 mp3Player.stop();
+                isPlaying = false;
             }
         }
     }

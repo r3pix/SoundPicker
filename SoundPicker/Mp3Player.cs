@@ -29,5 +29,10 @@ namespace SoundPicker
             string command = "stop MediaFile";
             mciSendString(command, null, 0, 0);
         }
+        public void Dispose()
+        {
+            string command = "close MediaFile";
+            mciSendString(command, null, 0, 0);
+        }
     }
 }
